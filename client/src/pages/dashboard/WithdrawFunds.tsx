@@ -7,7 +7,7 @@ const WithdrawFunds: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('bitcoin');
   const [amount, setAmount] = useState("");
   const [walletAddress, setWalletAddress] = useState('');
-  const { addTransaction, withdrawal } = useTransx()
+  const { transactions, addTransaction, withdrawal } = useTransx()
   const [copied, setCopied] = useState(false);
 
   const withdrawalMethods = [

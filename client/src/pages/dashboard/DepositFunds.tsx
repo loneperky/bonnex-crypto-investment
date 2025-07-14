@@ -9,7 +9,7 @@ const DepositFunds: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('bitcoin');
   const [amount, setAmount] = useState('');
   const [copied, setCopied] = useState(false);
-  const { transactions, withdrawal, deposit, addTransaction } = useTransx()
+  const { deposit, addTransaction } = useTransx()
 
   const walletAddresses = {
     bitcoin: '1DLjafrbENzz2bhLctxpUMZ2SSrxPPsWBQ',

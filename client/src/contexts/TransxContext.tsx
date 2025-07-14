@@ -27,11 +27,11 @@ export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
   const [withdrawal, setWithdrawal] = useState()
   const [deposit, setDeposit] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const BACKEND_URL = 'https://bonnex-crypto-investment-production.up.railway.app';
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/transactions/all');
+        const { data } = await axios.get(`${BACKEND_URL}/transactions/all`);
         setTransactions(data.transactions);
       } catch (err: any) {
         console.error('Error fetching transactions:', err.response?.data?.error || err.message);
@@ -48,7 +48,7 @@ export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
   useEffect(() => {
     const getWithdrawal = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/transactions/type/withdrawal`)
+        const { data } = await axios.get(`${BACKEND_URL}/transactions/type/withdrawal`)
         setWithdrawal(data.transactions)
         console.log(data)
       } catch (error: any) {
@@ -62,7 +62,7 @@ export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
   useEffect(() => {
     const getDeposit = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/transactions/type/deposit`)
+        const { data } = await axios.get(`${BACKEND_URL}/transactions/type/deposit`)
         setDeposit(data.transactions)
         console.log(data)
       } catch (error: any) {
@@ -81,7 +81,7 @@ export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
     status: 'Pending' | 'Completed' | 'Failed'
   ) => {
     try {
-      const { data } = await axios.post('http://localhost:5000/transactions/add', { amount, type, method, status });
+      const { data } = await axios.post(`${BACKEND_URL}/transactions/add`, { amount, type, method, status });
       setTransactions((prev) => [data.transaction, ...prev]);
       console.log('Transaction added successfully:', data.transaction);
     } catch (err: any) {

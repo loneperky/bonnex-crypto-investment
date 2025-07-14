@@ -25,15 +25,15 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const BACKEND_URL = 'https://bonnex-crypto-investment-production.up.railway.app';
   // ✅ Auto-login on app start
   useEffect(() => {
     const refreshAndFetchUser = async () => {
       try {
         // First try to refresh token
-        await axios.post('/auth/refresh-token');
+        await axios.post(`${BACKEND_URL}/auth/refresh-token`);
         // Then fetch the user
-        const { data } = await axios.get('/user/profile');
+        const { data } = await axios.get(`${BACKEND_URL}/user/profile`  );
         setUser(data?.user);
       } catch (err: any) {
         console.error('Auto-login failed', err.response?.data?.error || err.message);
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const { data } = await axios.post('/auth/log-in', { email, password });
+      const { data } = await axios.post(`${BACKEND_URL}/auth/log-in`, { email, password });
       setUser(data.user);
       return true;
     } catch (err: any) {
@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signup = async (email: string, password: string, name: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const { data } = await axios.post('/auth/sign-up', { email, password, name });
+      const { data } = await axios.post(`${BACKEND_URL}/auth/sign-up`, { email, password, name });
       setUser(data.user);
       return true;
     } catch (err: any) {
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // ✅ Logout
   const logout = async () => {
     try {
-      await axios.post('/auth/logout');
+      await axios.post(`${BACKEND_URL}/auth/logout`);
     } catch (err) {
       console.error('Logout failed', err);
     }
