@@ -9,7 +9,7 @@ import { addTransxRoute } from './Routes/userDetails/addTransx'
 import { getTransxByTypeRoute } from './Routes/userDetails/getType'
 import { profileRoute } from './Routes/userDetails/profile'
 import { RefreshTokenRoute } from './Routes/auth/refreshToken'
-import cookieParser = require('cookie-parser')
+import cookieParser from 'cookie-parser'
 dotenv.config()
 
 
@@ -18,7 +18,7 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://broker-app-frontend.vercel.app"],
+  origin: ["http://localhost:5173", "https://bonnex-crypto-investment.vercel.app"],
   credentials: true, // Allow cookies to be sent
 }))
 app.use(express.json())

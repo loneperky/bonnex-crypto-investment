@@ -207,7 +207,7 @@ const DepositFunds: React.FC = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 dark:border-gray-600">
-                <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Date</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Date & Time</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Method</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Amount</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Status</th>
