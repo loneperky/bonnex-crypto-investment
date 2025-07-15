@@ -27,4 +27,29 @@ router.get('/profile', authToken, async (req: Request, res: Response) => {
   res.status(200).json({ user: data });
 });
 
+router.post('/upgrade-plan', authToken, async (req: Request, res: Response) => {
+  const userId = (req as any).user?.userId;
+  const { planId } = req.body;
+
+  if (!userId || !planId) {
+    return res.status(400).json({ message: 'Bad Request: Missing user ID or plan ID' });
+  }
+
+  // Update user's plan in the database
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ plan_id: planId })
+    .eq('id', userId);
+
+  if (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+  res.status(200).json({ message: 'Plan updated successfully', data });
+});
+
+
+
+
+
 export { router as profileRoute };

@@ -6,11 +6,11 @@ const TickerBar: React.FC = () => {
     { symbol: 'BTC', price: 42350.50, change: 2.5 },
     { symbol: 'ETH', price: 2645.30, change: -1.2 },
     { symbol: 'BNB', price: 315.80, change: 3.8 },
-    { symbol: 'AAPL', price: 192.75, change: 1.5 },
-    { symbol: 'TSLA', price: 248.90, change: -0.8 },
-    { symbol: 'GOOGL', price: 142.15, change: 2.1 },
-    { symbol: 'MSFT', price: 378.25, change: 1.8 },
-    { symbol: 'AMZN', price: 153.40, change: -0.5 }
+    { symbol: 'SOL', price: 192.75, change: 1.5 },
+    { symbol: 'DOGE', price: 248.90, change: -0.8 },
+    { symbol: 'USDT', price: 142.15, change: 2.1 },
+    { symbol: 'DAI', price: 378.25, change: 1.8 },
+    { symbol: 'MATIC', price: 153.40, change: -0.5 }
   ]);
 
   useEffect(() => {

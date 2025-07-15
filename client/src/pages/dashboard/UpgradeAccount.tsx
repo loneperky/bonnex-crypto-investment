@@ -2,193 +2,26 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Crown, Star, Zap, Target, Shield, TrendingUp, CheckCircle, ArrowRight, Award, Gem } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-
+import { investmentPlans } from '../../components/InvestementPlans';
+import { useTransx } from '../../contexts/TransxContext';
 const UpgradeAccount: React.FC = () => {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
+  const { handleUpgrade } = useTransx();
   const [selectedPlan, setSelectedPlan] = useState('');
   const [showComparison, setShowComparison] = useState(false);
 
-  const currentPlan = {
-    name: 'Premium Plan',
-    price: 3000,
-    roi: 10,
-    tier: 2
+
+
+ 
+
+  const currentPlan = investmentPlans.find(p => p.id === user?.plan) || {
+    name: 'No Plan',
+    price: 0,
+    roi: 0,
+    tier: 0,
   };
 
-  const investmentPlans = [
-    {
-      id: 'starter',
-      name: 'Starter Plan',
-      price: 500,
-      roi: 5,
-      period: 'weekly',
-      tier: 1,
-      icon: Star,
-      color: 'bg-blue-500',
-      popular: false,
-      savings: 0,
-      features: [
-        'Minimum investment: $500',
-        '5% ROI weekly',
-        'Basic customer support',
-        'Standard analytics dashboard',
-        'Mobile app access',
-        'Email notifications',
-        'Basic market insights'
-      ],
-      benefits: [
-        'Perfect for beginners',
-        'Low risk investment',
-        'Steady returns'
-      ]
-    },
-    {
-      id: 'premium',
-      name: 'Premium Plan',
-      price: 3000,
-      roi: 10,
-      period: 'weekly',
-      tier: 2,
-      icon: Crown,
-      color: 'bg-yellow-500',
-      popular: true,
-      savings: 0,
-      current: true,
-      features: [
-        'Minimum investment: $3,000',
-        '10% ROI weekly',
-        'Priority customer support',
-        'Advanced analytics dashboard',
-        'Dedicated account manager',
-        'Investment signals included',
-        'Real-time notifications',
-        'Weekly market reports'
-      ],
-      benefits: [
-        'Most popular choice',
-        'Balanced risk-reward',
-        'Professional support'
-      ]
-    },
-    {
-      id: 'platinum',
-      name: 'Platinum Plan',
-      price: 5000,
-      roi: 15,
-      period: 'weekly',
-      tier: 3,
-      icon: Award,
-      color: 'bg-purple-500',
-      popular: false,
-      savings: 200,
-      features: [
-        'Minimum investment: $5,000',
-        '15% ROI weekly',
-        'VIP customer support',
-        'Premium analytics suite',
-        'Personal investment advisor',
-        'Exclusive market insights',
-        'Priority signal access',
-        'Custom risk assessment',
-        'Monthly strategy calls'
-      ],
-      benefits: [
-        'Higher returns',
-        'VIP treatment',
-        'Exclusive insights'
-      ]
-    },
-    {
-      id: 'diamond',
-      name: 'Diamond Plan',
-      price: 10000,
-      roi: 20,
-      period: 'weekly',
-      tier: 4,
-      icon: Gem,
-      color: 'bg-indigo-500',
-      popular: false,
-      savings: 500,
-      features: [
-        'Minimum investment: $10,000',
-        '20% ROI weekly',
-        'Elite customer support',
-        'Advanced AI analytics',
-        'Dedicated investment team',
-        'Private market access',
-        'Institutional-grade signals',
-        'Risk management tools',
-        'Weekly profit reviews',
-        'Custom portfolio optimization'
-      ],
-      benefits: [
-        'Maximum returns',
-        'Elite status',
-        'Institutional access'
-      ]
-    },
-    {
-      id: 'elite',
-      name: 'Elite Plan',
-      price: 25000,
-      roi: 25,
-      period: 'weekly',
-      tier: 5,
-      icon: Target,
-      color: 'bg-red-500',
-      popular: false,
-      savings: 1000,
-      features: [
-        'Minimum investment: $25,000',
-        '25% ROI weekly',
-        'White-glove service',
-        'AI-powered predictions',
-        'Private investment team',
-        'Exclusive trading opportunities',
-        'Market maker insights',
-        'Advanced risk management',
-        'Daily profit optimization',
-        'Private mastermind access',
-        'Guaranteed profit protection'
-      ],
-      benefits: [
-        'Ultimate returns',
-        'Exclusive access',
-        'Guaranteed protection'
-      ]
-    },
-    {
-      id: 'vip',
-      name: 'VIP Plan',
-      price: 50000,
-      roi: 30,
-      period: 'weekly',
-      tier: 6,
-      icon: Zap,
-      color: 'bg-green-500',
-      popular: false,
-      savings: 2000,
-      features: [
-        'Minimum investment: $50,000',
-        '30% ROI weekly',
-        'Concierge service',
-        'Quantum AI analysis',
-        'Private wealth management',
-        'Exclusive investment vehicles',
-        'Direct market access',
-        'Hedge fund strategies',
-        'Real-time profit optimization',
-        'Private equity opportunities',
-        'Wealth preservation strategies',
-        'Tax optimization services'
-      ],
-      benefits: [
-        'Wealth management',
-        'Exclusive opportunities',
-        'Tax optimization'
-      ]
-    }
-  ];
+
 
   const upgradeStats = {
     totalUsers: 12500,
@@ -197,9 +30,17 @@ const UpgradeAccount: React.FC = () => {
     avgUpgradeTime: '24 hours'
   };
 
-  const handleUpgrade = (planId: string) => {
-    setSelectedPlan(planId);
-    console.log('Upgrading to plan:', planId);
+  const handleUpgradeFunc = async (planId: string) => {
+    try {
+      await handleUpgrade(planId)
+      await fetchUser(); // Refresh user data after upgrade
+      setSelectedPlan(planId);
+      console.log(`Successfully upgraded to plan: ${planId}`);
+    } catch (error: any) {
+      console.error('Upgrade failed:', error.response?.data?.error || error.message);
+      return;
+    }
+
   };
 
   const getUpgradeDiscount = (plan: any) => {
@@ -291,30 +132,29 @@ const UpgradeAccount: React.FC = () => {
           const discount = getUpgradeDiscount(plan);
           const isUpgrade = plan.tier > currentPlan.tier;
           const isDowngrade = plan.tier < currentPlan.tier;
-          
+
           return (
             <motion.div
               key={plan.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-              className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border transition-all hover:shadow-lg ${
-                plan.current 
-                  ? 'border-blue-500 ring-2 ring-blue-200 dark:ring-blue-800' 
-                  : plan.popular 
-                    ? 'border-yellow-400 ring-2 ring-yellow-200 dark:ring-yellow-800'
-                    : 'border-gray-200 dark:border-gray-700'
-              }`}
+              className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border transition-all hover:shadow-lg ${user?.plan === plan.id
+                ? 'border-blue-500 ring-2 ring-blue-200 dark:ring-blue-800'
+                : plan.popular
+                  ? 'border-yellow-400 ring-2 ring-yellow-200 dark:ring-yellow-800'
+                  : 'border-gray-200 dark:border-gray-700'
+                }`}
             >
-              {plan.current && (
+              {user?.plan === plan.id && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     Current Plan
                   </span>
                 </div>
               )}
-              
-              {plan.popular && !plan.current && (
+
+              {plan.popular && user?.plan !== plan.id && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-semibold">
                     Most Popular
@@ -373,26 +213,27 @@ const UpgradeAccount: React.FC = () => {
               )}
 
               <button
-                onClick={() => handleUpgrade(plan.id)}
-                disabled={plan.current}
-                className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                  plan.current
+                onClick={() => handleUpgradeFunc(plan.id)}
+                disabled={user?.plan === plan.id}
+                className={`w-full py-3 rounded-lg font-semibold transition-colors ${user?.plan === plan.id
                     ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                     : isUpgrade
                       ? 'bg-green-600 text-white hover:bg-green-700'
                       : isDowngrade
                         ? 'bg-red-600 text-white hover:bg-red-700'
                         : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                  }`}
+
               >
-                {plan.current 
-                  ? 'Current Plan' 
-                  : isUpgrade 
+                {user?.plan === plan.id
+                  ? 'Current Plan'
+                  : isUpgrade
                     ? `Upgrade to ${plan.name}`
                     : isDowngrade
                       ? `Downgrade to ${plan.name}`
                       : `Switch to ${plan.name}`
                 }
+
               </button>
 
               {isUpgrade && (
@@ -413,7 +254,7 @@ const UpgradeAccount: React.FC = () => {
         className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
       >
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">How Upgrading Works</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
             { step: 1, title: 'Choose Plan', description: 'Select your desired investment plan' },

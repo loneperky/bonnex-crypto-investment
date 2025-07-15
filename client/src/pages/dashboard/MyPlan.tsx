@@ -1,23 +1,56 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, Calendar, TrendingUp, DollarSign, Clock, Target, Award, CheckCircle } from 'lucide-react';
+import { investmentPlans } from '../../components/InvestementPlans';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTransx } from '../../contexts/TransxContext'
 const MyPlan: React.FC = () => {
   const { transactions } = useTransx()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  const userPlan = investmentPlans.find(p => p.id === user?.plan);
+
+  // 1. Calculate total earned from transactions
+  const totalEarned = transactions
+    .filter(tx => tx.type === 'withdrawal' && tx.status === 'Completed') // or however you tag payouts
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  // 2. Get plan start date from user's first investment transaction
+  const investmentTx = transactions.find(tx => tx.type === "signal purchase"); // adjust based on your db
+  const planStart = investmentTx ? new Date(investmentTx.created_at) : null;
+
+  // 3. Estimate next payout as +7 days from latest payout
+  const lastPayout = transactions
+    .filter(tx => tx.type === "withdrawal")
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+
+  const nextPayout = lastPayout
+    ? new Date(new Date(lastPayout.created_at).getTime() + 7 * 24 * 60 * 60 * 1000)
+    : null;
+
+  // 4. Estimate days remaining assuming a 1-year plan
+  const today = new Date();
+  const totalDays = 365;
+  const daysRemaining = planStart
+    ? Math.max(totalDays - Math.floor((today.getTime() - planStart.getTime()) / (1000 * 60 * 60 * 24)), 0)
+    : 0;
+
 
   const planDetails = {
-    name: 'Premium Plan',
-    price: 3000,
-    roi: 10,
-    period: 'weekly',
-    startDate: '2024-01-15',
-    nextPayout: '2024-01-22',
-    totalEarned: 2850,
+    name: userPlan?.name || 'No Plan',
+    price: userPlan?.price || 0,
+    roi: userPlan?.roi || 0,
+    period: userPlan?.period || 'weekly',
+    startDate: planStart ? planStart.toLocaleDateString() : 'Not available',
+    nextPayout: nextPayout ? nextPayout.toLocaleDateString() : 'Not available',
+    totalEarned,
     status: 'Active',
-    daysRemaining: 180,
-    totalDays: 365
+    daysRemaining,
+    totalDays
   };
+
 
   const planFeatures = [
     'Minimum investment: $3,000',
@@ -30,13 +63,13 @@ const MyPlan: React.FC = () => {
     'Mobile app access'
   ];
 
-  const payoutHistory = [
-    { date: '2024-01-15', amount: 300, status: 'Completed' },
-    { date: '2024-01-08', amount: 300, status: 'Completed' },
-    { date: '2024-01-01', amount: 300, status: 'Completed' },
-    { date: '2023-12-25', amount: 300, status: 'Completed' },
-    { date: '2023-12-18', amount: 300, status: 'Completed' }
-  ];
+  // const payoutHistory = [
+  //   { date: '2024-01-15', amount: 300, status: 'Completed' },
+  //   { date: '2024-01-08', amount: 300, status: 'Completed' },
+  //   { date: '2024-01-01', amount: 300, status: 'Completed' },
+  //   { date: '2023-12-25', amount: 300, status: 'Completed' },
+  //   { date: '2023-12-18', amount: 300, status: 'Completed' }
+  // ];
 
   const availablePlans = [
     {
@@ -56,6 +89,12 @@ const MyPlan: React.FC = () => {
   ];
 
   const progressPercentage = ((365 - planDetails.daysRemaining) / 365) * 100;
+
+  const handleSignalClick = (price: number) => {
+    navigate(`/dashboard/deposit?amount=${price}`)
+    console.log('Signal clicked:', price);
+  };
+
 
   return (
     <div className="space-y-6">
@@ -205,25 +244,27 @@ const MyPlan: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((payout, index) => (
-                <tr key={index} className="border-b border-gray-100 dark:border-gray-700">
-                  <td className="py-3 px-4 text-gray-900 dark:text-white flex items-center space-x-2">
-                    <Calendar size={16} className="text-gray-400" />
-                    <span>{payout.date}</span>
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-green-600 dark:text-green-400">
-                    +${payout.amount.toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                      {payout.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-gray-900 dark:text-white">
-                    {planDetails.roi}%
-                  </td>
-                </tr>
-              ))}
+              {transactions
+                .filter(tx => tx.type === 'withdrawal' && tx.status === 'Completed')
+                .map((payout, index) => (
+                  <tr key={index} className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-3 px-4 text-gray-900 dark:text-white flex items-center space-x-2">
+                      <Calendar size={16} className="text-gray-400" />
+                      <span>{new Date(payout?.created_at).toLocaleString()}</span>
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-green-600 dark:text-green-400">
+                      +${payout.amount.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                        {payout.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {planDetails.roi}%
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -259,7 +300,7 @@ const MyPlan: React.FC = () => {
                   </li>
                 ))}
               </ul>
-              <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+              <button onClick={() => handleSignalClick(plan.price)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Upgrade to {plan.name}
               </button>
             </div>

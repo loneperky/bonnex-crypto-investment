@@ -29,7 +29,7 @@ router.post('/sign-up', async (req: Request, res: Response) => {
 
     // 2. Insert profile data into `profiles` table
     const { error: profileError } = await supabase.from('profiles').insert([
-      { id: user.id, email, full_name: name },
+      { id: user.id, email, full_name: name, plan_id: 'none' } // Default plan set to 'none'
     ]);
 
     if (profileError) return res.status(400).json({ error: profileError.message });

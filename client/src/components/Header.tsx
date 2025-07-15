@@ -42,11 +42,11 @@ const Header: React.FC = () => {
             <a href="#testimonial" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               Testimonial
             </a>
-            
+
             {user ? (
               <div className="flex items-center space-x-4">
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Dashboard
@@ -60,21 +60,21 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/signup" 
+                <Link
+                  to="/signup"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Sign Up
                 </Link>
               </div>
             )}
-            
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
@@ -101,23 +101,23 @@ const Header: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
           >
             <div className="flex flex-col space-y-4">
-              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link onClick={() => setIsMenuOpen(!isMenuOpen)} to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Home
               </Link>
-              <Link to="/#about" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a onClick={() => setIsMenuOpen(!isMenuOpen)} href="#about" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 About
-              </Link>
-              <Link to="/#plans" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              </a>
+              <a onClick={() => setIsMenuOpen(!isMenuOpen)} href="#plans" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Plans
-              </Link>
-              <Link to="/#contact" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              </a>
+              <a onClick={() => setIsMenuOpen(!isMenuOpen)} href="#contact" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Contact
-              </Link>
-              
+              </a>
+
               {user ? (
                 <>
-                  <Link 
-                    to="/dashboard" 
+                  <Link
+                    to="/dashboard"
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
                   >
                     Dashboard
@@ -131,21 +131,23 @@ const Header: React.FC = () => {
                 </>
               ) : (
                 <div className="flex flex-col space-y-2">
-                  <Link 
-                    to="/login" 
+                  <Link
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    to="/login"
                     className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     Login
                   </Link>
-                  <Link 
-                    to="/signup" 
+                  <Link
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    to="/signup"
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
                   >
                     Sign Up
                   </Link>
                 </div>
               )}
-              
+
               <button
                 onClick={toggleTheme}
                 className="flex items-center space-x-2 text-gray-700 dark:text-gray-300"

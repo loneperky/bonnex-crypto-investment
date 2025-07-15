@@ -22,11 +22,32 @@ const WithdrawFunds: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const totalDeposits = transactions.filter(t => t.type === 'deposit').reduce((sum, t) => sum + t.amount, 0);
+
+  const totalWithdrawals = withdrawal?.reduce((sum, t) => sum + t.amount, 0) || 0;
   const parseNum = parseFloat(amount)
+  if (parseNum > totalDeposits) {
+    alert("Withdrawal amount exceeds total deposits.");
+    return;
+  }
   const symbol: string | undefined = withdrawalMethods.find(m => m.id === selectedMethod)?.symbol
+
+  // if(isNaN(parseNum) || parseNum <= 0) {
+  //   alert("Please enter a valid amount.");
+  //   return;
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const parseNum = Number(amount)
+    if (isNaN(parseNum) || parseNum <= 0) {
+      alert("Please enter a valid withdrawal amount.");
+      return;
+    }
+    if (parseNum > totalDeposits!) {
+      alert("Withdrawal amount exceeds total deposits.");
+      return;
+    }
     addTransaction(parseNum, "withdrawal", String(symbol), "Pending")
     alert(`Withdrawal of ${amount} ${withdrawalMethods.find(m => m.id === selectedMethod)?.symbol} submitted! Please wait while we process your request.`);
     setAmount('');

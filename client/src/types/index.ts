@@ -15,6 +15,7 @@ export interface AuthContextType {
   signup: (email: string, password: string, name: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  fetchUser: () => Promise<void>;
 }
 
 // Transaction type for financial transactions
@@ -32,5 +33,8 @@ export interface TransxContextType {
   withdrawal?: Transaction[];
   deposit?: Transaction[];
   addTransaction: (amount: number, type: Transaction['type'], method: string, status: Transaction['status']) => Promise<void>;
+  handleUpgrade: (planId: string) => Promise<void>,
   isLoading: boolean;
+  selectedPlan?: string;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
 }

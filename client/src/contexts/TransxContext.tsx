@@ -25,6 +25,7 @@ interface ProviderProps {
 export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [withdrawal, setWithdrawal] = useState()
+  const [selectedPlan,setSelectedPlan] = useState("")
   const [deposit, setDeposit] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const BACKEND_URL = 'https://bonnex-crypto-investment-production.up.railway.app';
@@ -89,8 +90,21 @@ export const TransxProvider: React.FC<ProviderProps> = ({ children }) => {
     }
   };
 
+  const handleUpgrade = async (planId: string) => {
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/user/upgrade-plan`, { planId }
+      );
+      console.log(res.data.message); // Plan updated successfully
+      // Optionally update local state
+      setSelectedPlan(planId);
+    } catch (error) {
+      console.error('Upgrade failed:', error);
+    }
+  };
+
   return (
-    <TransxContext.Provider value={{ transactions, withdrawal, deposit, addTransaction, isLoading }}>
+    <TransxContext.Provider value={{ transactions, withdrawal, deposit, addTransaction, isLoading,handleUpgrade,selectedPlan,setSelectedPlan }}>
       {children}
     </TransxContext.Provider>
   );

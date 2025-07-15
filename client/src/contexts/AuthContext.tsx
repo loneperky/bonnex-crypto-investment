@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // First try to refresh token
         await axios.post(`${BACKEND_URL}/auth/refresh-token`);
         // Then fetch the user
-        const { data } = await axios.get(`${BACKEND_URL}/user/profile`  );
+        const { data } = await axios.get(`${BACKEND_URL}/user/profile`);
         setUser(data?.user);
       } catch (err: any) {
         console.error('Auto-login failed', err.response?.data?.error || err.message);
@@ -45,6 +45,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     refreshAndFetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    const res = await axios.get(`${BACKEND_URL}/user/profile`); // your API to get current user
+    setUser(res.data); // update context
+  };
+
 
   // ✅ Login
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -89,7 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, isLoading, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

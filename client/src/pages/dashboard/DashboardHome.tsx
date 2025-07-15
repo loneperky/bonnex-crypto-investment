@@ -50,11 +50,66 @@ const DashboardHome: React.FC = () => {
     { id: 4, type: 'Profit', amount: 600, date: '2024-01-12', status: 'Completed' }
   ];
 
-  const notifications = [
-    { id: 1, message: 'Weekly profit of $750 has been credited to your account', time: '2 hours ago' },
-    { id: 2, message: 'Your Premium Plan is active and performing well', time: '1 day ago' },
-    { id: 3, message: 'Investment signal alert: BTC showing strong bullish trend', time: '2 days ago' }
-  ];
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffMins > 0) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    return 'just now';
+  };
+
+  const notifications = transactions
+    .slice()
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 6)
+    .map((tx, index) => {
+      let message = '';
+      let icon = '';
+      let color = '';
+
+      switch (tx.type) {
+        case 'deposit':
+          message = `You deposited $${tx.amount.toLocaleString()}`;
+          icon = '💰';
+          color = 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200';
+          break;
+        case 'withdrawal':
+          message = `You withdrew $${tx.amount.toLocaleString()}`;
+          icon = '📤';
+          color = 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200';
+          break;
+        case 'signal purchase':
+          message = `You bought a signal worth $${tx.amount.toLocaleString()}`;
+          icon = '🎯';
+          color = 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200';
+          break;
+        case 'profit':
+          message = `You received a profit of $${tx.amount.toLocaleString()}`;
+          icon = '📈';
+          color = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200';
+          break;
+        default:
+          message = `You made a ${tx.type} of $${tx.amount.toLocaleString()}`;
+          icon = '🔔';
+          color = 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200';
+      }
+
+      return {
+        id: tx.id ?? index,
+        message,
+        icon,
+        color,
+        time: formatTimeAgo(tx.created_at)
+      };
+    });
+
+
 
   return (
     <div className="space-y-6">
@@ -109,24 +164,24 @@ const DashboardHome: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Transactions</h2>
           <div className="space-y-4">
             {transactions.map((transaction) => (
-              <div key={transaction.trnxId} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'Deposit' ? 'bg-green-100 text-green-600' :
-                    transaction.type === 'Withdrawal' ? 'bg-red-100 text-red-600' :
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'deposit' ? 'bg-green-100 text-green-600' :
+                    transaction.type === 'withdrawal' ? 'bg-red-100 text-red-600' :
                       'bg-blue-100 text-blue-600'
                     }`}>
-                    {transaction.type === 'Deposit' ? '↓' :
-                      transaction.type === 'Withdrawal' ? '↑' : '$'}
+                    {transaction.type === 'deposit' ? '↓' :
+                      transaction.type === 'withdrawal' ? '↑' : '$'}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{transaction.type}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{transaction.date}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(transaction.created_at).toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`font-semibold ${transaction.type === 'Withdrawal' ? 'text-red-600' : 'text-green-600'
+                  <p className={`font-semibold ${transaction.type === 'withdrawal' ? 'text-red-600' : 'text-green-600'
                     }`}>
-                    {transaction.type === 'Withdrawal' ? '-' : '+'}${transaction.amount.toLocaleString()}
+                    {transaction.type === 'withdrawal' ? '-' : '+'}${transaction.amount.toLocaleString()}
                   </p>
                   <p className={`text-sm ${transaction.status === 'Completed' ? 'text-green-600' : 'text-yellow-600'
                     }`}>
@@ -151,14 +206,20 @@ const DashboardHome: React.FC = () => {
           </div>
           <div className="space-y-4">
             {notifications.map((notification) => (
-              <div key={notification.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <p className="text-sm text-gray-900 dark:text-white mb-2">{notification.message}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-1">
-                  <Calendar size={12} />
-                  <span>{notification.time}</span>
-                </p>
+              <div key={notification.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-start space-x-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold ${notification.color}`}>
+                  {notification.icon}
+                </div>
+                <div>
+                  <p className="text-sm text-gray-900 dark:text-white mb-1">{notification.message}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-1">
+                    <Calendar size={12} />
+                    <span>{notification.time}</span>
+                  </p>
+                </div>
               </div>
             ))}
+
           </div>
         </motion.div>
       </div>
