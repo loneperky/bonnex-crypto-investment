@@ -9,14 +9,27 @@ export interface User {
   totalProfit: number;
 }
 
+// types.ts
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+
+// Inside AuthContextType (maybe in AuthContext.ts or types.ts)
+
+
 export interface AuthContextType {
-  user: User | null;
+  user: (User & { profile?: any }) | null;
   login: (email: string, password: string) => Promise<boolean>;
   signup: (email: string, password: string, name: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
   fetchUser: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<ForgotPasswordResponse>; // ✅ updated
+  setUser: React.Dispatch<React.SetStateAction<(User & { profile?: any }) | null>>;
 }
+
 
 // Transaction type for financial transactions
 export interface Transaction {

@@ -6,3 +6,4 @@ client/build
 server/.env
 client/package-lock.json
 server/package-lock.json
+client/.env

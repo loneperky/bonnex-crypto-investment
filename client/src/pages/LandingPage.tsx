@@ -91,26 +91,26 @@ const LandingPage: React.FC = () => {
                 Invest Smart in <span className="text-yellow-400">Cryptocurrency</span>
               </h1>
               <p className="text-xl mb-8 text-blue-100">
-                Join thousands of investors who trust Bonnex for secure, profitable cryptocurrency investments. 
+                Join thousands of investors who trust Bonnex for secure, profitable cryptocurrency investments.
                 Start earning consistent returns with our proven investment strategies.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link 
-                  to="/signup" 
+                <Link
+                  to="/signup"
                   className="bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-colors inline-flex items-center justify-center"
                 >
                   Get Started Today
                   <ArrowRight className="ml-2" size={20} />
                 </Link>
-                <Link 
-                  to="/about" 
+                <a
+                  href="#about"
                   className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors text-center"
                 >
                   Learn More
-                </Link>
+                </a>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -228,9 +228,8 @@ const LandingPage: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className={`relative bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ${
-                  plan.popular ? 'border-2 border-yellow-400' : ''
-                }`}
+                className={`relative bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ${plan.popular ? 'border-2 border-yellow-400' : ''
+                  }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -239,7 +238,7 @@ const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 )}
-                
+
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
                     {plan.name}
@@ -266,11 +265,10 @@ const LandingPage: React.FC = () => {
 
                 <Link
                   to="/signup"
-                  className={`w-full py-3 rounded-lg font-semibold transition-colors text-center block ${
-                    plan.popular
+                  className={`w-full py-3 rounded-lg font-semibold transition-colors text-center block ${plan.popular
                       ? 'bg-yellow-500 text-blue-900 hover:bg-yellow-400'
                       : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400'
-                  }`}
+                    }`}
                 >
                   Choose Plan
                 </Link>
@@ -323,13 +321,13 @@ const LandingPage: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="text-yellow-400 fill-current" size={20} />
                   ))}
                 </div>
-                
+
                 <p className="text-gray-700 dark:text-gray-300 italic">
                   "{testimonial.content}"
                 </p>

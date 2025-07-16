@@ -9,6 +9,7 @@ import { addTransxRoute } from './Routes/userDetails/addTransx'
 import { getTransxByTypeRoute } from './Routes/userDetails/getType'
 import { profileRoute } from './Routes/userDetails/profile'
 import { RefreshTokenRoute } from './Routes/auth/refreshToken'
+import { ForgotPasswordRoute } from './Routes/auth/forgotPassword'
 import cookieParser from 'cookie-parser'
 dotenv.config()
 
@@ -29,6 +30,7 @@ app.use("/auth", SignUpRoute)
 app.use("/auth", LoginRoute)
 app.use("/auth", LogOutRoute)
 app.use("/auth", RefreshTokenRoute)
+app.use("/auth", ForgotPasswordRoute)
 // User Details Route
 app.use("/transactions", getAllTransxRoute)
 app.use("/transactions", addTransxRoute)
