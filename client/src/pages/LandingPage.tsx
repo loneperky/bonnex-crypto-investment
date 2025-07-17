@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, TrendingUp, DollarSign, Users, Star, ArrowRight, Check, LogOut } from 'lucide-react';
+import AdComponent from '../components/AdComponent';
 
 const LandingPage: React.FC = () => {
   const testimonials = [
@@ -110,7 +111,7 @@ const LandingPage: React.FC = () => {
                 </a>
               </div>
             </motion.div>
-
+            <AdComponent />
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -266,8 +267,8 @@ const LandingPage: React.FC = () => {
                 <Link
                   to="/signup"
                   className={`w-full py-3 rounded-lg font-semibold transition-colors text-center block ${plan.popular
-                      ? 'bg-yellow-500 text-blue-900 hover:bg-yellow-400'
-                      : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400'
+                    ? 'bg-yellow-500 text-blue-900 hover:bg-yellow-400'
+                    : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400'
                     }`}
                 >
                   Choose Plan

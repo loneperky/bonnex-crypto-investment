@@ -5,6 +5,7 @@ import { Crown, Calendar, TrendingUp, DollarSign, Clock, Target, Award, CheckCir
 import { investmentPlans } from '../../components/InvestementPlans';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTransx } from '../../contexts/TransxContext'
+import AdComponent from '../../components/AdComponent';
 const MyPlan: React.FC = () => {
   const { transactions } = useTransx()
   const { user } = useAuth()
@@ -105,7 +106,7 @@ const MyPlan: React.FC = () => {
       >
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Investment Plan</h1>
       </motion.div>
-
+      <AdComponent />
       {/* Current Plan Overview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
