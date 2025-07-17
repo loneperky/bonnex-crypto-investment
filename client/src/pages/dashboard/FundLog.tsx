@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTransx } from '../../contexts/TransxContext';
 import { Search, Filter, Download, TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-react';
-import AdComponent from '../../components/AdComponent';
 const FundLog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
@@ -68,7 +67,7 @@ const FundLog: React.FC = () => {
       >
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Fund Log</h1>
       </motion.div>
-      <AdComponent />
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div

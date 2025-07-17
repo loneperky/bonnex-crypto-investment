@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Calendar, DollarSign, BarChart3, Filter, Download } from 'lucide-react';
-import AdComponent from '../../components/AdComponent';
 
 const ProfitHistory: React.FC = () => {
   const [timeFilter, setTimeFilter] = useState('30');
@@ -134,8 +133,6 @@ const ProfitHistory: React.FC = () => {
       </div>
 
       {/* Profit by Type */}
-
-      <AdComponent />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

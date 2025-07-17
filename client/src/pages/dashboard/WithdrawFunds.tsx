@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, number } from 'framer-motion';
 import { useTransx } from '../../contexts/TransxContext';
 import { Copy, CheckCircle, AlertCircle, Bitcoin, DollarSign, Clock, Shield } from 'lucide-react';
-import AdComponent from '../../components/AdComponent';
 
 const WithdrawFunds: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('bitcoin');
@@ -127,7 +126,7 @@ const WithdrawFunds: React.FC = () => {
                 Minimum withdrawal: $100
               </p>
             </div>
-              <AdComponent />
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Your {withdrawalMethods.find(m => m.id === selectedMethod)?.name} Wallet Address

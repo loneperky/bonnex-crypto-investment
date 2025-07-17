@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTransx } from '../../contexts/TransxContext'
 import { Copy, CheckCircle, AlertCircle, Bitcoin, DollarSign } from 'lucide-react';
-import AdComponent from '../../components/AdComponent';
+
 const DepositFunds: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [selectedMethod, setSelectedMethod] = useState('bitcoin');
@@ -68,9 +68,7 @@ const DepositFunds: React.FC = () => {
           className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
         >
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Select Deposit Method</h2>
-          <AdComponent />
-          
-          {/* Deposit Methods */}
+
           <div className="space-y-4 mb-6">
             {depositMethods.map((method) => (
               <div

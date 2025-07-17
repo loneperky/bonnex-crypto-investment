@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, TrendingDown, Star, Clock, Target, Shield, Zap, Crown, Award, Gem } from 'lucide-react';
-import AdComponent from '../../components/AdComponent';
 
 const PurchaseSignals: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -191,7 +190,7 @@ const PurchaseSignals: React.FC = () => {
           Get professional trading signals from our expert analysts and boost your trading success.
         </p>
       </motion.div>
-      <AdComponent />
+
       {/* Signal Plans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {signalPlans.map((plan, index) => (
